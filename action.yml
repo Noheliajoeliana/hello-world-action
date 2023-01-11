@@ -1,13 +1,27 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: 'R2 upload'
+description: 'Upload a file to cloudflare R2 storage'
 inputs:
-  who-to-greet:  # id of input
-    description: 'Who to greet'
+  account-id:
+    description: 'R2 Account ID'
     required: true
-    default: 'World'
+  access-key-id:
+    description: 'R2 Access key id'
+    required: true
+  secret-access-key:
+    description: 'R2 Secret access key'
+    required: true
+  r2-bucket:
+    description: 'R2 destination bucket'
+    required: true
+  r2-path:
+    description: 'Destination path'
+    required: false
+  filename:
+    description: 'Source file path'
+    required: true
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  data:
+    description: 'Response from R2'
 runs:
   using: 'node16'
   main: 'dist/index.js'
