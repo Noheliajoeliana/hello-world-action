@@ -19,6 +19,9 @@ inputs:
   filename:
     description: 'Source file path'
     required: true
+  content-type:
+    description: 'Content type of file to upload'
+    required: false
 outputs:
   data:
     description: 'Response from R2'

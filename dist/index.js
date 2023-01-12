@@ -41860,6 +41860,7 @@ const SECRET_ACCESS_KEY = core.getInput('secret-access-key');
 const BUCKET = core.getInput('r2-bucket');
 const FINAL_PATH = core.getInput('r2-path');
 const FILENAME = core.getInput('filename');
+const CONTENT_TYPE = core.getInput('content-type');
 
 try {
   const client = new S3({
@@ -41877,12 +41878,14 @@ try {
   });
 
   const destination = FINAL_PATH || FILENAME;
-
-  client.putObject({
+  const data = {
     Body: file,
     Key: destination,
     Bucket: BUCKET,
-  }).then(response => {
+  };
+  if (CONTENT_TYPE) data.ContentType = CONTENT_TYPE;
+
+  client.putObject(data).then(response => {
     console.log('Success! ', response);
     core.setOutput('data', response)
   });
