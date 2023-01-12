@@ -1,0 +1,23 @@
+name: Compile index file
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+
+      - name: Build
+        run: ncc build index.js -m --licence licenses.txt
+
+      - name: Commit and push
+        run: |
+          git config user.name 'Noheliajoeliana'
+          git config user.email 'nohelia.j.r.a@gmail.com'
+          git commit -m 'Build file'
+          git push
