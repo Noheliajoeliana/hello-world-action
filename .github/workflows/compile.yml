@@ -22,5 +22,6 @@ jobs:
         run: |
           git config user.name 'Noheliajoeliana'
           git config user.email 'nohelia.j.r.a@gmail.com'
+          git add dist/
           git commit -m 'Build file' 
           git push
