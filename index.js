@@ -27,6 +27,8 @@ const fileInfo = core.getInput('file-info');
     });
 
     const filesToUpload = await matchingFiles(files);
+
+    console.log('ALL FILES', filesToUpload);
     function uploadFiles(){
 
       const responses = [];
@@ -52,8 +54,10 @@ const fileInfo = core.getInput('file-info');
           ContentType: contentType
         };
 
-        const response = await client.putObject(data);
-        responses.push(response);
+        console.log('DATA', data);
+
+        // const response = await client.putObject(data);
+        // responses.push(response);
 
         return (index < files.length - 1) && uploadOne(index + 1);
       }
