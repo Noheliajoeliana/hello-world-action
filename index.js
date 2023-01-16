@@ -60,6 +60,8 @@ const fileInfo = core.getInput('file-info');
         // const response = await client.putObject(data);
         // responses.push(response);
 
+        console.log(index, files.length, (index < files.length - 1));
+
         return (index < files.length - 1) && uploadOne(index + 1);
       }
 
