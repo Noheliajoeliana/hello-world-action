@@ -71,11 +71,11 @@ const fileInfo = core.getInput('file-info');
       });
 
     }
-    //
-    // uploadFiles().then(response => {
-    //   console.log('Success! ', response);
-    //   core.setOutput('data', response)
-    // })
+
+    uploadFiles().then(response => {
+      console.log('Success! ', response);
+      core.setOutput('data', response)
+    })
 
   } catch(error) {
     core.setFailed(error.message);
