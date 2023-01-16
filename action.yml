@@ -16,7 +16,7 @@ inputs:
   r2-path:
     description: 'Destination path'
     required: false
-  fileinfo:
+  file-info:
     description: 'Array with objects containing path and contentType of every file to upload'
     required: true
 
