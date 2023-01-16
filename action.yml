@@ -16,12 +16,10 @@ inputs:
   r2-path:
     description: 'Destination path'
     required: false
-  filename:
-    description: 'Source file path'
+  fileinfo:
+    description: 'Array with objects containing path and contentType of every file to upload'
     required: true
-  content-type:
-    description: 'Content type of file to upload'
-    required: false
+
 outputs:
   data:
     description: 'Response from R2'
