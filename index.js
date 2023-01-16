@@ -23,7 +23,7 @@ try {
   });
 
   console.log(FILEINFO);
-  console.log(Array.isArray(FILEINFO));
+  console.log(JSON.parse(FILEINFO));
   // const file = fs.createReadStream(FILENAME);
   // file.on('error', (error) => {
   //   core.setFailed(error.message);
