@@ -11,7 +11,7 @@ function execute(command) {
 }
 
 async function pattern(pattern){
-  const files = await execute(`find -name ${pattern} `);
+  const files = await execute(`find -name "${pattern}" `);
   console.log('files matching', files);
   return files.split('\n').map( fileName => ({ fileName }));
 }
