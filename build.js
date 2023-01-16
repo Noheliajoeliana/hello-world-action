@@ -7,4 +7,6 @@ require('@vercel/ncc')('./index.js', {
 }).then(async ({ code }) => {
   await fs.mkdir('./dist').catch(e => e);
   return fs.writeFile('./dist/index.js', code, { flag: 'w+' });
+}).catch(e => {
+  console.log('ERROR IN BUILDING', e)
 });
