@@ -34,6 +34,7 @@ const fileInfo = core.getInput('file-info');
       const responses = [];
       async function uploadOne(index = 0){
         let { fileName, contentType, finalPath } = filesToUpload[index];
+        console.log('INDEX: ', index)
 
         if (!fileName) return (index < files.length - 1) && uploadOne(index + 1);
 
@@ -54,7 +55,7 @@ const fileInfo = core.getInput('file-info');
           ContentType: contentType
         };
 
-        console.log('DATA', data);
+        console.log('DATA: ', index, ' .', data);
 
         // const response = await client.putObject(data);
         // responses.push(response);
