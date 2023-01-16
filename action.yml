@@ -13,16 +13,15 @@ inputs:
   r2-bucket:
     description: 'R2 destination bucket'
     required: true
-  r2-path:
-    description: 'Destination path'
+  r2-parent-folder:
+    description: 'Folder destination path'
     required: false
   file-info:
-    description: 'Array with objects containing path and contentType of every file to upload'
+    description: 'Info of files to upload'
     required: true
-
 outputs:
   data:
-    description: 'Response from R2'
+    description: 'Responses from R2'
 runs:
   using: 'node16'
   main: 'dist/index.js'
