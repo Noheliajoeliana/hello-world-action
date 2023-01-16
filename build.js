@@ -1,12 +1,9 @@
 const fs = require('fs/promises');
 require('@vercel/ncc')('./index.js', {
-  // provide a custom cache path or disable caching
   cache: false,
-  minify: true, // default
+  minify: true,
   sourceMapRegister: false
 }).then(async ({ code }) => {
   await fs.mkdir('./dist').catch(e => e);
   return fs.writeFile('./dist/index.js', code, { flag: 'w+' });
-}).catch(e => {
-  console.log('ERROR IN BUILDING', e)
 });

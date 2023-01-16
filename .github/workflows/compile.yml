@@ -1,7 +1,9 @@
 name: Compile index file
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - develop
 
 jobs:
   build:

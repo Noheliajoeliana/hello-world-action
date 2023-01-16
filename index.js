@@ -9,31 +9,29 @@ const accountId = core.getInput('account-id');
 const accessKeyId = core.getInput('access-key-id');
 const secretAccessKey = core.getInput('secret-access-key');
 const bucket = core.getInput('r2-bucket');
-const finalPath = core.getInput('r2-path');
+const parentFolder = core.getInput('r2-parent-folder');
 const fileInfo = core.getInput('file-info');
 
 (async function execution(){
   try {
     const files = JSON.parse(fileInfo);
     if (!Array.isArray(files)) core.setFailed('File info must be an array');
-    //
-    // const client = new S3({
-    //   region: 'auto',
-    //   endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
-    //   credentials: {
-    //     accessKeyId: accessKeyId,
-    //     secretAccessKey: secretAccessKey
-    //   }
-    // });
-    //
-    const filesToUpload = await matchingFiles(files);
-    console.log(filesToUpload);
 
+    const client = new S3({
+      region: 'auto',
+      endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+      credentials: {
+        accessKeyId: accessKeyId,
+        secretAccessKey: secretAccessKey
+      }
+    });
+
+    const filesToUpload = await matchingFiles(files);
     function uploadFiles(){
 
       const responses = [];
       async function uploadOne(index = 0){
-        let { fileName, contentType } = filesToUpload[index];
+        let { fileName, contentType, finalPath } = filesToUpload[index];
 
         if (!fileName) return (index < files.length - 1) && uploadOne(index + 1);
 
@@ -44,19 +42,18 @@ const fileInfo = core.getInput('file-info');
           console.log(`Stream: ${fileName} failed with error: ${error.message}`);
         });
 
-        console.log(index, ' ', stream, ' ', fileName);
+        const baseName = path.basename(fileName);
+        const finalDestination = parentFolder ? path.join(parentFolder, finalPath || baseName) : baseName;
 
         const data = {
           Body: stream,
-          Key: finalPath || path.basename(fileName),
+          Key: finalDestination,
           Bucket: bucket,
           ContentType: contentType
         };
 
-        console.log(data);
-
-        // const response = await client.putObject(data);
-        // responses.push(response);
+        const response = await client.putObject(data);
+        responses.push(response);
 
         return (index < files.length - 1) && uploadOne(index + 1);
       }
