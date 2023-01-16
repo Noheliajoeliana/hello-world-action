@@ -10,8 +10,8 @@ function execute(command) {
   });
 }
 
-async function pattern(pattern){
-  const files = await execute(`find -name "${pattern}" `);
+async function pattern(pattern, path){
+  const files = await execute(`find ${path || ''} -name "${pattern}" `);
   console.log('files matching', files);
   return files.split('\n').map( fileName => ({ fileName }));
 }
@@ -22,10 +22,10 @@ async function matchingFiles(files = []){
   async function process(index = 0){
     if (files.length <= 0) return separatedFiles;
 
-    const { fileName, contentType } = files[index];
+    const { fileName, contentType, sourcePath } = files[index];
     console.log('In action', fileName, fileName.includes('*'))
     if (fileName.includes('*')){
-      const matching = await pattern(fileName);
+      const matching = await pattern(fileName, sourcePath);
       const final = contentType ? matching.map(file => Object.assign(file, { contentType })) : matching;
       separatedFiles.push(...final);
     } else {
