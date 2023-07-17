@@ -27,16 +27,13 @@ const fileInfo = core.getInput('file-info');
     });
 
     const filesToUpload = await matchingFiles(files);
-
-    console.log('ALL FILES', filesToUpload);
     function uploadFiles(){
 
       const responses = [];
       async function uploadOne(index = 0){
         let { fileName, contentType, finalPath } = filesToUpload[index];
-        console.log('INDEX: ', index)
 
-        if (!fileName) return (index < files.length - 1) && uploadOne(index + 1);
+        if (!fileName) return (index < filesToUpload.length - 1) && uploadOne(index + 1);
 
         contentType = contentType || mime.lookup(fileName);
 
@@ -55,14 +52,10 @@ const fileInfo = core.getInput('file-info');
           ContentType: contentType
         };
 
-        console.log('DATA: ', index, ' .', data);
+        const response = await client.putObject(data);
+        responses.push(response);
 
-        // const response = await client.putObject(data);
-        // responses.push(response);
-
-        console.log(index, files.length, (index < files.length - 1));
-
-        return (index < files.length - 1) && uploadOne(index + 1);
+        return (index < filesToUpload.length - 1) && uploadOne(index + 1);
       }
 
       return new Promise(async (resolve, reject) => {
