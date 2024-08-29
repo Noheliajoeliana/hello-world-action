@@ -60,7 +60,7 @@ async function uploadFiles(filesToUpload, client){
 
     const filesToUpload = await matchingFiles(files);
 
-    uploadFiles(filesToUpload, client).then(response => {
+    await uploadFiles(filesToUpload, client).then(response => {
       core.info(`Success! ${response}`)
       core.setOutput('data', response);
     });
