@@ -9,4 +9,5 @@ build({
   minify: true,
   sourcemap: false,
   target: ['node16'],
+  logLevel: 'silent'
 }).catch(() => process.exit(1));
