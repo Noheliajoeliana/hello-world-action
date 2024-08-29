@@ -8,5 +8,5 @@ build({
   outfile: 'dist/index.js',
   minify: true,
   sourcemap: false,
-  target: ['node18'],
+  target: ['node16'],
 }).catch(() => process.exit(1));
