@@ -22,6 +22,7 @@
     "@actions/github": "^5.1.1",
     "@aws-sdk/client-s3": "^3.245.0",
     "@vercel/ncc": "^0.36.0",
+    "esbuild": "^0.23.1",
     "mime-types": "^2.1.35"
   }
 }
