@@ -60,7 +60,7 @@ const fileInfo = core.getInput('file-info');
 
       return new Promise(async (resolve, reject) => {
         try {
-          await(uploadOne());
+          await uploadOne();
           resolve(responses);
         } catch(error) {
           reject(error)
@@ -75,6 +75,7 @@ const fileInfo = core.getInput('file-info');
     })
 
   } catch(error) {
+    console.log('ERROR', error);
     core.setFailed(error.message);
   }
 })();
