@@ -39,7 +39,8 @@ const fileInfo = core.getInput('file-info');
 
         const stream = fs.createReadStream(fileName);
         stream.on('error', (error) => {
-          console.log(`Stream: ${fileName} failed with error: ${error.message}`);
+          core.error(`Stream: ${fileName} failed with error: ${error.message}`);
+          throw error;
         });
 
         const baseName = path.basename(fileName);
@@ -70,12 +71,12 @@ const fileInfo = core.getInput('file-info');
     }
 
     uploadFiles().then(response => {
-      console.log('Success! ', response);
+      core.info(`Success! ${response}`)
       core.setOutput('data', response)
     })
 
   } catch(error) {
-    console.log('ERROR', error);
+    core.error(error)
     core.setFailed(error.message);
   }
 })();
