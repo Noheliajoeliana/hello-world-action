@@ -12,10 +12,42 @@ const bucket = core.getInput('r2-bucket');
 const parentFolder = core.getInput('r2-parent-folder');
 const fileInfo = core.getInput('file-info');
 
+async function uploadFiles(filesToUpload, client){
+
+  const responses = [];
+
+  for await (let {fileName, contentType, finalPath} of filesToUpload) {
+
+    if (!fileName) continue;
+
+    contentType = contentType || mime.lookup(fileName);
+
+    const stream = fs.createReadStream(fileName);
+    stream.on('error', (error) => {
+      core.error(`Stream: ${fileName} failed with error: ${error.message}`);
+      throw error;
+    });
+
+    const baseName = path.basename(fileName);
+    const finalDestination = parentFolder ? path.join(parentFolder, finalPath || baseName) : baseName;
+
+    const data = {
+      Body: stream,
+      Key: finalDestination,
+      Bucket: bucket,
+      ContentType: contentType
+    };
+
+    const response = await client.putObject(data);
+    responses.push(response);
+  }
+  return responses;
+}
+
 (async function execution(){
   try {
     const files = JSON.parse(fileInfo);
-    if (!Array.isArray(files)) core.setFailed('File info must be an array');
+    if (!Array.isArray(files)) return core.setFailed('File info must be an array');
 
     const client = new S3({
       region: 'auto',
@@ -27,56 +59,14 @@ const fileInfo = core.getInput('file-info');
     });
 
     const filesToUpload = await matchingFiles(files);
-    function uploadFiles(){
 
-      const responses = [];
-      async function uploadOne(index = 0){
-        let { fileName, contentType, finalPath } = filesToUpload[index];
-
-        if (!fileName) return (index < filesToUpload.length - 1) && uploadOne(index + 1);
-
-        contentType = contentType || mime.lookup(fileName);
-
-        const stream = fs.createReadStream(fileName);
-        stream.on('error', (error) => {
-          core.error(`Stream: ${fileName} failed with error: ${error.message}`);
-          throw error;
-        });
-
-        const baseName = path.basename(fileName);
-        const finalDestination = parentFolder ? path.join(parentFolder, finalPath || baseName) : baseName;
-
-        const data = {
-          Body: stream,
-          Key: finalDestination,
-          Bucket: bucket,
-          ContentType: contentType
-        };
-
-        const response = await client.putObject(data);
-        responses.push(response);
-
-        return (index < filesToUpload.length - 1) && uploadOne(index + 1);
-      }
-
-      return new Promise(async (resolve, reject) => {
-        try {
-          await uploadOne();
-          resolve(responses);
-        } catch(error) {
-          reject(error)
-        }
-      });
-
-    }
-
-    uploadFiles().then(response => {
+    uploadFiles(filesToUpload, client).then(response => {
       core.info(`Success! ${response}`)
-      core.setOutput('data', response)
-    })
+      core.setOutput('data', response);
+    });
 
   } catch(error) {
-    core.error(error)
-    core.setFailed(error.message);
+    core.error(error);
+    core.setFailed('FAILING HERE. CHECKING OUTPUT');
   }
 })();
